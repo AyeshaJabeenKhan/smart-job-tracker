@@ -63,6 +63,7 @@ API Documentation Reference
 The interface exposes standard endpoints organized by functional domain:
 
 Method,Endpoint,Description
+
 POST,/api/v1/jobs/,Instantiates a new tracking record inside the persistent engine.
 GET,/api/v1/jobs/,Fetches a paginated collection of tracked applications.
 GET,/api/v1/jobs/{id},Retrieves a single application record by its unique Primary Key.
