@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Job Tracker Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans selection:bg-indigo-500/30">
+
+    <nav class="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50 px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="bg-gradient-to-tr from-indigo-600 to-violet-500 p-2 rounded-xl text-white font-extrabold tracking-wider text-xs shadow-lg shadow-indigo-500/20">
+                SJT
+            </div>
+            <h1 class="text-lg font-bold bg-gradient-to-r from-slate-100 via-indigo-200 to-cyan-300 bg-clip-text text-transparent tracking-tight">
+                Smart Job Tracker
+            </h1>
+        </div>
+        <div class="flex items-center space-x-6">
+            <a href="/docs" target="_blank" class="text-xs font-medium text-slate-400 hover:text-indigo-400 transition-colors duration-200">
+                Core API Reference
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <div class="lg:col-span-4 space-y-6">
+            <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 shadow-2xl backdrop-blur-sm relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-violet-600"></div>
+                
+                <div class="flex items-center space-x-2.5 mb-3">
+                    <span class="text-lg">✨</span>
+                    <h2 class="text-md font-semibold text-slate-100 tracking-tight">AI Data Extraction Engine</h2>
+                </div>
+                <p class="text-xs text-slate-400 mb-5 leading-relaxed">
+                    Eliminate repetitive forms. Drop raw unformatted job descriptions from LinkedIn or Indeed below to isolate structural targets.
+                </p>
+                
+                <textarea id="rawText" rows="10" 
+                    class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all duration-300 resize-none placeholder-slate-600 leading-relaxed font-mono" 
+                    placeholder="Paste the messy text content here..."></textarea>
+                
+                <button onclick="parseJobWithAI()" id="parseBtn" 
+                    class="mt-4 w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium text-xs py-3 px-4 rounded-xl transition-all duration-300 shadow-md shadow-indigo-600/10 hover:shadow-indigo-500/20 active:scale-[0.99]">
+                    Extract Parameters via Gemini AI
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:col-span-8 space-y-8">
+            
+            <div class="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-6 shadow-xl relative">
+                <h2 class="text-sm font-semibold text-slate-300 mb-5 flex items-center space-x-2 tracking-tight">
+                    <span class="text-indigo-400">01 /</span> <span>Structured Pipeline Entry</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Target Job Title</label>
+                        <input id="jobTitle" type="text" 
+                            class="w-full bg-slate-950 border border-slate-800/80 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-slate-700 transition-colors" 
+                            placeholder="Awaiting extraction process...">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Corporate Entity (Company)</label>
+                        <input id="companyName" type="text" 
+                            class="w-full bg-slate-950 border border-slate-800/80 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-slate-700 transition-colors" 
+                            placeholder="Awaiting extraction process...">
+                    </div>
+                </div>
+                
+                <div class="mt-5">
+                    <label class="block text-[11px] font-medium text-slate-400 mb-1.5 uppercase tracking-wider">Job Board Origin Link</label>
+                    <input id="jobUrl" type="text" 
+                        class="w-full bg-slate-950 border border-slate-800/80 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-slate-700 transition-colors placeholder-slate-700" 
+                        placeholder="https://example-posting-url.com">
+                </div>
+
+                <div class="mt-6 pt-5 border-t border-slate-900 flex justify-end">
+                    <button onclick="saveJobToDatabase()"
+                        class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-emerald-600/10 hover:shadow-emerald-500/20 active:scale-[0.98]">
+                        Commit to Core Database
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900/40 border border-slate-800/60 rounded-2xl p-6 shadow-xl relative">
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="text-sm font-semibold text-slate-300 flex items-center space-x-2 tracking-tight">
+                        <span class="text-cyan-400">02 /</span> <span>Automated Intelligence Prep Module</span>
+                    </h2>
+                    
+                    <div class="flex items-center space-x-2">
+                        <label class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Load Count:</label>
+                        <select id="questionCount" class="bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-300 p-1.5 focus:outline-none focus:border-slate-700 font-medium">
+                            <option value="3">3 Questions</option>
+                            <option value="5" selected>5 Questions</option>
+                            <option value="8">8 Questions</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="generateInterviewPrep()" id="prepBtn" 
+                    class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-md shadow-cyan-600/10 active:scale-[0.99]">
+                    Generate Tailored Interview Questions
+                </button>
+
+                <div id="questionsOutput" class="mt-5 p-5 bg-slate-950/50 border border-slate-800/80 rounded-xl hidden text-xs text-slate-300 leading-relaxed font-mono overflow-x-auto">
+                    </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        async function parseJobWithAI() {
+            const rawText = document.getElementById('rawText').value;
+            const parseBtn = document.getElementById('parseBtn');
+            
+            if (!rawText.trim()) {
+                alert("Provide raw text data inside the processing terminal first.");
+                return;
+            }
+
+            parseBtn.disabled = true;
+            parseBtn.innerText = "Querying Model Models...";
+            parseBtn.classList.add('opacity-40', 'cursor-not-allowed');
+
+            try {
+                const response = await fetch('/api/v1/jobs/parse-ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raw_text: rawText })
+                });
+
+                if (!response.ok) throw new Error("Upstream component failure exception.");
+
+                const data = await response.json();
+                
+                document.getElementById('jobTitle').value = data.title || '';
+                document.getElementById('companyName').value = data.company || '';
+                document.getElementById('jobUrl').value = data.location || ''; 
+                
+                parseBtn.innerText = "Execution Success ✨";
+            } catch (error) {
+                console.error(error);
+                alert("Operational failure parsing entity dependencies. Check configuration variables.");
+                parseBtn.innerText = "Extract Parameters via Gemini AI";
+            } finally {
+                setTimeout(() => {
+                    parseBtn.disabled = false;
+                    parseBtn.innerText = "Extract Parameters via Gemini AI";
+                    parseBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+                }, 2000);
+            }
+        }
+
+        async function saveJobToDatabase() {
+            const title = document.getElementById('jobTitle').value;
+            const company = document.getElementById('companyName').value;
+            const location = document.getElementById('jobUrl').value;
+
+            if (!title || !company) {
+                alert("Missing parameter dependencies. Validate Title and Company configurations.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/v1/jobs/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        company: company,
+                        location: location,
+                        description: "Parsed via automation dashboard layer",
+                        status: "Applied"
+                    })
+                });
+
+                if (!response.ok) throw new Error("Storage pipeline write reject exception.");
+
+                alert(`🎉 Documented: "${title}" at ${company} committed safely to storage.`);
+                
+                document.getElementById('rawText').value = "";
+                document.getElementById('jobTitle').value = "";
+                document.getElementById('companyName').value = "";
+                document.getElementById('jobUrl').value = "";
+
+            } catch (error) {
+                console.error(error);
+                alert("Storage commit mutation failure context.");
+            }
+        }
+
+        async function generateInterviewPrep() {
+            const rawText = document.getElementById('rawText').value;
+            const count = document.getElementById('questionCount').value;
+            const prepBtn = document.getElementById('prepBtn');
+            const outputArea = document.getElementById('questionsOutput');
+
+            if (!rawText.trim()) {
+                alert("Provide source job posting description text to synthesize analytics context.");
+                return;
+            }
+
+            prepBtn.disabled = true;
+            prepBtn.innerText = "Processing LLM Target Matrix...";
+            outputArea.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/v1/jobs/generate-prep', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ raw_text: rawText, question_count: parseInt(count) })
+                });
+
+                if (!response.ok) throw new Error("Pipeline compilation exception.");
+
+                const data = await response.json();
+                
+                outputArea.innerHTML = data.questions_markdown.replace(/\n/g, '<br>');
+                outputArea.classList.remove('hidden');
+                prepBtn.innerText = "Generate Tailored Interview Questions";
+            } catch (error) {
+                console.error(error);
+                alert("Model system error processing requested parameter count.");
+                prepBtn.innerText = "Generate Tailored Interview Questions";
+            } finally {
+                prepBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
